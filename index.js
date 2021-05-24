@@ -29,6 +29,13 @@ client.connect(err => {
         res.send(result.insertedCount > 0) 
       })
   })
+  
+  app.get('/appointment/list',(req,res) => {
+    Appointments.find({})
+    .toArray((err,document) => {
+      res.send(document)
+    })
+  })
 });
 
 app.listen(port, () => {
