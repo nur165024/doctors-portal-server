@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
   const Appointments = client.db(`${process.env.DATABASE_NAME}`).collection("appointments");
+  // appointment store data
   app.post('/appointment/store',(req,res) => {
       const appointmentBody = req.body;
       Appointments.insertOne(appointmentBody)
@@ -29,13 +30,22 @@ client.connect(err => {
         res.send(result.insertedCount > 0) 
       })
   })
-  
+  // appointment list api
   app.get('/appointment/list',(req,res) => {
     Appointments.find({})
     .toArray((err,document) => {
       res.send(document)
     })
   })
+  // appointment by date api
+  app.post('/appointmentByDate',(req,res) => {
+    const date = req.body;
+    Appointments.find({date : date.date})
+    .toArray((error,documents) => {
+      res.send(documents);
+    })
+  })
+
 });
 
 app.listen(port, () => {
